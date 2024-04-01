@@ -4,16 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediction Display</title>
+    <script>
+        // Function to reload the page every 10 seconds
+        function reloadPage() {
+            setTimeout(function() {
+                location.reload();
+            }, 10000); // 10000 milliseconds = 10 seconds
+        }
+
+        // Call the reloadPage function when the page loads
+        window.onload = reloadPage;
+    </script>
 </head>
 <body>
     <h1>Predictions</h1>
-    {% for triplet_id, prediction_history in all_prediction_history.items() %}
-        <h2>Triplet ID: {{ triplet_id }}</h2>
-        <ul>
-            {% for prediction in prediction_history %}
-                <li>{{ prediction }}</li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+    
+    <ul>
+        {% for triplet_id, prediction_history in all_prediction_history.items() %}
+            <li>{{ triplet_id }}: {{ prediction_history }}</li>
+        {% endfor %}
+    </ul>
+    
 </body>
 </html>

@@ -157,6 +157,7 @@ def runModel(data_tensor):
 
 # Function to insert data into database
 
+
 def insertDatabase(prediction, triplet_id):
     connection = mysql.connector.connect(host="82.180.142.51",
                                          database="u978805288_land",
@@ -180,53 +181,17 @@ def insertDatabase(prediction, triplet_id):
             connection.close()
 
 
-
-
-# def continuousLoop():
-#     while True:
-#         try:
-#             with app.app_context():
-#                 # Define your station IDs here
-#                 triplet_ids = ['t36','t37','t41', 't40']
-#                 for triplet_id in triplet_ids:
-#                     prediction_history = []
-#                     data, date = loadData(triplet_id)
-#                     if data:
-#                         date = date + timedelta(minutes=10)
-#                         # data = dataPreprocess(data)
-#                         preprocessed_data = dataPreprocess(data)
-#                         data_list = []
-#                         count = 0
-#                         for i in range(10):
-#                             d = preprocessed_data[count:count+13]
-#                             data_list.append(d)
-#                             count += 13
-
-#                         data_array = np.array(data_list)
-#                         data_array = data_array.reshape((-1, 10, 13))
-#                         data_tensor = tf.convert_to_tensor(
-#                             data_array, dtype=tf.float32)
-#                         prediction = runModel(data_tensor)
-#                         insertDatabase(prediction, triplet_id)
-#                         prediction_history.append(prediction)
-#                         print("Inserted for: ",triplet_id)
-#                         time.sleep(10)
-#                     else:
-#                         print("No data found for triplet ID:", triplet_id)
-#                 time.sleep(10)  # Sleep for 10 seconds before running again
-#                 # Render template with the prediction history
-#                 render_template(
-#                     'index2.html', prediction_history=prediction_history)
-#         except Exception as e:
-#             print(f"Error occurred in continuous loop: {str(e)}")
-
-
+# THIS ONE
 def continuousLoop():
     try:
         with app.app_context():
             # Define your station IDs here
-            triplet_ids = ['t38','t36','t37','t40','t41','t50','t51','t52','t53','t54']
-            # Create a dictionary to store prediction history for each triplet ID
+            triplet_ids = ['t70', 't71', 't74', 't75',
+                           't76', 't36', 't37', 't38', 't40']
+            # triplet_ids = ['t38', 't36', 't37', 't40','t70','t71','t74','t75','t76','t77','t83','t82',
+            #               't83','t63','t64','t66','t68','t41', 't50', 't51']
+            
+            # dictionary to store prediction history for each triplet ID
             all_prediction_history = {}
             for triplet_id in triplet_ids:
                 prediction_history = []
@@ -249,35 +214,37 @@ def continuousLoop():
                     prediction = runModel(data_tensor)
                     insertDatabase(prediction, triplet_id)
                     prediction_history.append(prediction)
+                    print(prediction_history)
                     print("Inserted for: ", triplet_id)
                     # time.sleep(10)
                 else:
                     print("No data found for triplet ID:", triplet_id)
                 # Store prediction history for the current triplet ID
                 all_prediction_history[triplet_id] = prediction_history
-            # Sleep for 10 seconds before running again
+                print(all_prediction_history)
+            # Sleep 10 seconds before running again
             time.sleep(10)
     except Exception as e:
         print(f"Error occurred in continuous loop: {str(e)}")
-    return all_prediction_history  # Return the prediction history dictionary
+    return all_prediction_history  
 
 
 # Start the background thread
 thread = threading.Thread(target=continuousLoop)
 thread.daemon = True
 thread.start()
+# END
+
 
 # Main route
 # @app.route('/')
 # def index():
 #     return render_template('index2.html')
 
-
 @app.route('/')
 def index():
     all_prediction_history = continuousLoop()
     return render_template('index2.html', all_prediction_history=all_prediction_history)
-
 
 
 if __name__ == '__main__':
