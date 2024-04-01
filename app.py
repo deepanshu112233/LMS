@@ -186,8 +186,8 @@ def continuousLoop():
     try:
         with app.app_context():
             # Define your station IDs here
-            triplet_ids = ['t70', 't71', 't74', 't75',
-                           't76', 't36', 't37', 't38', 't40']
+            triplet_ids = ['t62']
+            
             # triplet_ids = ['t38', 't36', 't37', 't40','t70','t71','t74','t75','t76','t77','t83','t82',
             #               't83','t63','t64','t66','t68','t41', 't50', 't51']
             
